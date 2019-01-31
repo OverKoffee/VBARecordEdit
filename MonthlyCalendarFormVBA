@@ -1,0 +1,52 @@
+Option Compare Database
+
+
+Private Sub btn_Go_Click()
+   Call goToMyRecord
+        
+End Sub
+
+
+
+Private Sub Form_Open(Cancel As Integer)
+    Call goToMyRecord
+    
+End Sub
+
+
+Function goToMyRecord()
+    Dim getString As String
+    Dim rst As DAO.Recordset
+    
+    Set rst = [Forms]![Monthly Calendar].Recordset
+    With rst
+        If DLookup("[ID]", "tbMonthlyNotes", "[Selected Year] = '" & Me.ComboYear & "' AND [Selected Month] = '" & Me.ComboMonth & "'") > 0 Then
+            getString = DLookup("[ID]", "tbMonthlyNotes", "[Selected Year] = '" & Me.ComboYear & "' AND [Selected Month] = '" & Me.ComboMonth & "'")
+            .FindFirst "[ID] = " & getString
+            If .NoMatch Then
+                .AddNew
+                ![Selected Year] = Me.ComboYear
+                ![Selected Month] = Me.ComboMonth
+                .Update
+            End If
+        Else
+                .AddNew
+                ![Selected Year] = Me.ComboYear
+                ![Selected Month] = Me.ComboMonth
+                .Update
+        End If
+    End With
+End Function
+
+
+
+Private Sub ComboMonth_GotFocus()
+    Me.ComboMonth.Dropdown
+End Sub
+
+
+Private Sub ComboYear_GotFocus()
+    Me.ComboYear.Dropdown
+End Sub
+
+
